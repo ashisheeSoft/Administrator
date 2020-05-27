@@ -65,13 +65,13 @@ public class MenuFragment extends Fragment {
         //searching_item
         searchLayout = (LinearLayout)view.findViewById(R.id.searchview_button);
 
-//        searchLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(),search.class);
-//                startActivity(intent);
-//            }
-//        });
+        searchLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Search.class);
+                startActivity(intent);
+            }
+        });
 
         recyclerView  = (RecyclerView)view.findViewById(R.id.recycler_home);
         recyclerView.setHasFixedSize(true);

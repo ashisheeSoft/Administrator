@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Search">
+    <androidx.appcompat.widget.Toolbar
+        android:background="#FBC711"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <LinearLayout
+            android:gravity="center|right"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/search_edit"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:inputType="textFilter"
+                android:paddingLeft="20dp"
+                android:layout_marginLeft="45dp"
+                android:textSize="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/search_background"
+                android:textStyle="normal"
+                android:hint="Find Your Sweets..."/>
+            <ImageButton
+                android:id="@+id/search_button"
+                android:paddingBottom="3dp"
+                android:paddingTop="3dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center|right"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search"
+                android:background="@drawable/search_back_three"/>
+
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+</RelativeLayout>
