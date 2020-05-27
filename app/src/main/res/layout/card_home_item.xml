@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="4dp"
+    app:cardElevation="4dp">
+<LinearLayout
+    android:weightSum="2"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:orientation="horizontal">
+    <ImageView
+        android:scaleType="fitXY"
+        android:layout_weight="1"
+        android:elevation="8dp"
+        android:id="@+id/item_image"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:src="@color/colorAccent"/>
+    <LinearLayout
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sweet Name"
+            android:layout_gravity="center"
+            android:textColor="#6E6E6E"
+            android:textSize="20dp"/>
+        <TextView
+            android:textAlignment="textStart"
+            android:id="@+id/item_price_kg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rs.200/Kg"
+            android:textColor="#A9735B"
+            android:gravity="start" />
+        <TextView
+            android:textAlignment="textStart"
+            android:id="@+id/item_price_pcs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rs.20/Piece"
+            android:textColor="#A9735B"
+            android:gravity="start" />
+        <Button
+            android:id="@+id/add_button"
+            android:textColor="#FFF1D4"
+            android:layout_marginTop="30dp"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:text="Add"
+            android:background="@drawable/button_background"/>
+    </LinearLayout>
+</LinearLayout>
+</androidx.cardview.widget.CardView>
