@@ -1,10 +1,10 @@
 package com.example.adminstrator;
 
-import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Search extends AppCompatActivity {
+import android.os.Bundle;
+
+public class SearchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -13,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,8 +32,8 @@ import java.util.List;
 public class MenuFragment extends Fragment {
 
     private Toolbar toolbar;
-    FirebaseDatabase database;
-    DatabaseReference reference;
+    private FirebaseDatabase database;
+    private DatabaseReference reference;
 
     private RecyclerView recyclerView;
     private HomeAd homeadapter;
@@ -39,6 +41,8 @@ public class MenuFragment extends Fragment {
 
     //searching_item
     private LinearLayout searchLayout;
+
+    FloatingActionButton fabAddItem;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -49,7 +53,7 @@ public class MenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_menu, container, false);
+        final View view = inflater.inflate(R.layout.fragment_menu, container, false);
 
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -68,8 +72,18 @@ public class MenuFragment extends Fragment {
         searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), Search.class);
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        fabAddItem = view.findViewById(R.id.fab_add_item);
+
+        fabAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FabAddItemDialog fabAddItemDialog = new FabAddItemDialog();
+                fabAddItemDialog.show(getFragmentManager(), "FabAddItemDialog");
             }
         });
 
