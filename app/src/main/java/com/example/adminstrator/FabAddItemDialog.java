@@ -41,16 +41,16 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View v) {
 
-                /*Intent galleryIntent = new Intent();
-                galleryIntent.setType("image/*");
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-                startActivityForResult(galleryIntent, GALLERY_PICK);*/
+//                Intent galleryIntent = new Intent();
+//                galleryIntent.setType("image/*");
+//                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+//
+//                startActivityForResult(galleryIntent, GALLERY_PICK);
 
                 CropImage.activity()
                         .setAspectRatio(1,1)
                         .setGuidelines(CropImageView.Guidelines.ON)
-                        .start(getActivity());
+                        .start(getContext(), FabAddItemDialog.this);
 
             }
         });
@@ -61,12 +61,12 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-                Toast.makeText(getContext(), resultUri.toString(), Toast.LENGTH_SHORT).show();
-                uploadItem.setImageURI(null);
+//                Toast.makeText(getContext(), resultUri.toString(), Toast.LENGTH_SHORT).show();
                 uploadItem.setImageURI(resultUri);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
