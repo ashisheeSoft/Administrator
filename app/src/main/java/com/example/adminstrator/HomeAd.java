@@ -54,6 +54,7 @@ public class HomeAd extends RecyclerView.Adapter<HomeAd.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
+
         final HomeMo homemodel = mHomeList.get(position);
 
         holder.itemname.setText(homemodel.getItemName());
@@ -61,9 +62,13 @@ public class HomeAd extends RecyclerView.Adapter<HomeAd.ViewHolder>{
         holder.itempricepcs.setText(homemodel.getItemPricepcs());
 
 
+
         Glide.with(holder.itemimage.getContext())
                 .load(homemodel.getItemImage())
                 .into(holder.itemimage);
+
+//        mHomeList.clear();
+
 
     }
 

@@ -90,6 +90,7 @@ public class MenuFragment extends Fragment {
         recyclerView  = (RecyclerView)view.findViewById(R.id.recycler_home);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         mHomeList = new ArrayList<>();
         homeadapter = new HomeAd(getContext(),mHomeList);
         recyclerView.setAdapter(homeadapter);

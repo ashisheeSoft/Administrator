@@ -50,11 +50,11 @@ public class HomeMo {
     public HomeMo() {
     }
 
-    public HomeMo(String itemImage, String itemName, String itemPricekg, String itemPricepcs, String itemId) {
+    public HomeMo(String itemImage, String itemName, String itemPriceKg, String itemPricePcs, String itemId) {
         this.itemImage = itemImage;
         this.itemName = itemName;
-        this.itemPricekg = itemPricekg;
-        this.itemPricepcs = itemPricepcs;
+        this.itemPricekg = itemPriceKg;
+        this.itemPricepcs = itemPricePcs;
         this.itemId = itemId;
     }
 }

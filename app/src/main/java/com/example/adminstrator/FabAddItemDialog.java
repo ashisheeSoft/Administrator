@@ -19,8 +19,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -30,23 +32,31 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.Random;
+
 import static android.app.Activity.RESULT_OK;
 
 public class FabAddItemDialog extends AppCompatDialogFragment {
 
     private static final int GALLERY_PICK = 1;
-    ImageView imageViewUploadItem;
+    private ImageView imageViewUploadItem;
 
     private Uri mItemImageUri;
 
     private StorageReference mStorageReference;
     private DatabaseReference mDatabaseRefrence;
 
-    Button buttonAddItem;
-    EditText editTextItemName;
-    EditText editTextPriceKg;
-    EditText editTextPricePc;
+    private EditText editTextItemName;
+    private EditText editTextPriceKg;
+    private EditText editTextPricePc;
 
+    private String itemName;
+    private String itemPriceKg;
+    private String itemPricePc;
+    private String itemImage;
+
+
+    String num;
 
     @NonNull
     @Override
@@ -60,21 +70,18 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
         editTextPriceKg = view.findViewById(R.id.et_price_kg);
         editTextPricePc = view.findViewById(R.id.et_price_pc);
 
-        buttonAddItem = view.findViewById(R.id.btn_add_item);
+        Button buttonAddItem = view.findViewById(R.id.btn_add_item);
+        Random rnd = new Random();
+      int  orderidint = 100000 + rnd.nextInt(900000);
+      num = String.valueOf(orderidint);
 
-        mStorageReference = FirebaseStorage.getInstance().getReference("uploads");
-        mDatabaseRefrence = FirebaseDatabase.getInstance().getReference("uploads");
+        mStorageReference = FirebaseStorage.getInstance().getReference("Sweets").child(num);
+        mDatabaseRefrence = FirebaseDatabase.getInstance().getReference("Sweets").child(num);
 
         imageViewUploadItem = view.findViewById(R.id.imageView_upload_item);
         imageViewUploadItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                Intent galleryIntent = new Intent();
-//                galleryIntent.setType("image/*");
-//                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-//
-//                startActivityForResult(galleryIntent, GALLERY_PICK);
 
                 CropImage.activity()
                         .setAspectRatio(1,1)
@@ -87,7 +94,6 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
         buttonAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(getContext(), mItemImageUri.toString(), Toast.LENGTH_SHORT).show();
                 uploadItem();
             }
         });
@@ -103,7 +109,6 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 mItemImageUri = result.getUri();
-//                Toast.makeText(getContext(), resultUri.toString(), Toast.LENGTH_SHORT).show();
                 imageViewUploadItem.setImageURI(mItemImageUri);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -113,32 +118,34 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
     }
     private void uploadItem() {
         if (mItemImageUri != null) {
-            StorageReference itemRefrence = mStorageReference.child(System.currentTimeMillis() + "");
-            itemRefrence.putFile(mItemImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getContext(), "Upload Successful", Toast.LENGTH_SHORT).show();
-                    String itemName = editTextItemName.getText().toString();
-                    String itemPriceKg = editTextPriceKg.getText().toString();
-                    String itemPricePc = editTextPricePc.getText().toString();
 
-                    HomeMo upload = new HomeMo(taskSnapshot.getUploadSessionUri().toString(),itemName,itemPriceKg, itemPricePc, "12346");
-                    String uploadId = mDatabaseRefrence.push().getKey();
-                    mDatabaseRefrence.child(uploadId).setValue(upload);
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
+            mStorageReference.putFile(mItemImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            })
-            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
+
+                    mStorageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            itemImage = uri.toString();
+                            itemName = editTextItemName.getText().toString();
+                            itemPriceKg = editTextPriceKg.getText().toString();
+                            itemPricePc = editTextPricePc.getText().toString();
+
+                             HomeMo upload = new HomeMo(itemImage, itemName, itemPriceKg, itemPricePc, num);
+
+                            mDatabaseRefrence.setValue(upload);
+
+                            Toast.makeText(getContext(), "Upload Successful", Toast.LENGTH_SHORT).show();
+
+                            getDialog().dismiss();
+                        }
+                    });
                 }
             });
+
+
+
         } else {
             Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
