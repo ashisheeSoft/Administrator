@@ -93,7 +93,7 @@ public class MenuFragment extends Fragment {
 
         mHomeList = new ArrayList<>();
         homeadapter = new HomeAd(getContext(),mHomeList);
-        recyclerView.setAdapter(homeadapter);
+
         readPost();
         return view;
     }
@@ -103,12 +103,20 @@ public class MenuFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //pdialog.show();
-                for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
-                    HomeMo shopmodal = dataSnapshot1.getValue(HomeMo.class);
-                    mHomeList.add(shopmodal);
-                    homeadapter.notifyDataSetChanged();
+                if (isAdded()){
+                    if (dataSnapshot.exists()){
+                        mHomeList = new ArrayList<>();
+                        for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                            //HomeMo shopmodal = dataSnapshot1.getValue(HomeMo.class);
+                            mHomeList.add(dataSnapshot1.getValue(HomeMo.class));
+
+                        }
+                        homeadapter = new HomeAd(getContext(), mHomeList);
+                        recyclerView.setAdapter(homeadapter);
+                    }
                 }
+
+
 
             }
 
