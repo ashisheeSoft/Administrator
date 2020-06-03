@@ -7,6 +7,7 @@
     android:layout_marginBottom="4dp"
     app:cardElevation="4dp">
 <LinearLayout
+    android:id="@+id/linear_layout"
     android:weightSum="0"
     android:padding="5dp"
     android:layout_width="match_parent"
@@ -54,12 +55,12 @@
             android:textColor="#A9735B"
             android:gravity="start" />
         <Button
-            android:id="@+id/add_button"
+            android:id="@+id/edit_button"
             android:textColor="#FFF1D4"
             android:layout_marginTop="30dp"
             android:layout_width="100dp"
             android:layout_height="30dp"
-            android:text="Add"
+            android:text="Edit"
             android:background="@drawable/button_background"/>
     </LinearLayout>
 </LinearLayout>

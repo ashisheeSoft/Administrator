@@ -2,15 +2,15 @@ package com.example.adminstrator;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,17 +18,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.DialogFragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -40,74 +38,73 @@ import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
 
-public class FabAddItemDialog extends AppCompatDialogFragment {
-
-    private static final int GALLERY_PICK = 1;
-    private ImageView imageViewUploadItem;
-
+public class CardEditDialog extends DialogFragment {
     private Uri mItemImageUri;
-
-    private StorageReference mStorageReference;
-    private DatabaseReference mDatabaseRefrence;
-
     private EditText editTextItemName;
     private EditText editTextPriceKg;
     private EditText editTextPricePc;
 
-    private String itemName;
-    private String itemPriceKg;
-    private String itemPricePc;
-    private String itemImage;
-
-    private String itemNameCard;
-
-
-    String num;
-
-    @NonNull
+    private ImageView imageViewUploadItem;
+     StorageReference mStorageReference;
+    DatabaseReference reference;
+    String itemId;
+    String itemImage;
+    @Nullable
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.card_edit_dialog,container,false);
 
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.layout_fab_dialog,null);
+        reference = FirebaseDatabase.getInstance().getReference().child("Sweets");
+        mStorageReference = FirebaseStorage.getInstance().getReference("Sweets");
+
+
+        String itemName =getArguments().getString("itemName");
+        String itemPriceKg =getArguments().getString("itemPriceKg");
+        String itemPricePcs =getArguments().getString("itemPricePcs");
+        itemId =getArguments().getString("itemId");
+         itemImage =getArguments().getString("itemImage");
+
+        Log.d("Refrence1", reference.child(itemId).toString());
+
 
         editTextItemName = view.findViewById(R.id.et_item_name);
         editTextPriceKg = view.findViewById(R.id.et_price_kg);
         editTextPricePc = view.findViewById(R.id.et_price_pc);
-
-        Button buttonAddItem = view.findViewById(R.id.btn_add_item);
-        Random rnd = new Random();
-      int  orderidint = 100000 + rnd.nextInt(900000);
-      num = String.valueOf(orderidint);
-
-        mStorageReference = FirebaseStorage.getInstance().getReference("Sweets").child(num);
-        mDatabaseRefrence = FirebaseDatabase.getInstance().getReference("Sweets").child(num);
-
         imageViewUploadItem = view.findViewById(R.id.imageView_upload_item);
-        imageViewUploadItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                CropImage.activity()
-                        .setAspectRatio(1,1)
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .start(getContext(), FabAddItemDialog.this);
+        if (! itemName.equals(null) && ! itemPriceKg.equals(null) && !itemPricePcs.equals(null) && ! itemImage.equals(null)){
 
-            }
-        });
+            Glide.with(getContext()).load(itemImage).into(imageViewUploadItem);
+            editTextItemName.setText(itemName);
+            editTextPriceKg.setText(itemPriceKg);
+            editTextPricePc.setText(itemPricePcs);
+
+            imageViewUploadItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    CropImage.activity()
+                            .setAspectRatio(1,1)
+                            .setGuidelines(CropImageView.Guidelines.ON)
+                            .start(getContext(), CardEditDialog.this);
+
+                }
+            });
+
+        }
+        Button buttonAddItem = view.findViewById(R.id.btn_edit_item);
 
         buttonAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getContext(), editTextItemName.getText().toString().trim(), Toast.LENGTH_SHORT).show();
+
                 uploadItem();
             }
         });
 
-                builder.setView(view);
-        return builder.create();
+        return view;
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
@@ -123,15 +120,16 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
 
     }
     private void uploadItem() {
-        if (mItemImageUri != null) {
 
+        if (mItemImageUri != null) {
+            Log.d("Card Dialog", "Inside UploadItem");
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getApplicationContext().getContentResolver(),mItemImageUri);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
                 bitmap.compress(Bitmap.CompressFormat.JPEG,25,baos);
                 byte [] data = baos.toByteArray();
-                mStorageReference.putBytes(data).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                mStorageReference.child(itemId).putBytes(data).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
@@ -139,14 +137,12 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
                         mStorageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                itemImage = uri.toString();
-                                itemName = editTextItemName.getText().toString();
-                                itemPriceKg = editTextPriceKg.getText().toString();
-                                itemPricePc = editTextPricePc.getText().toString();
+                                String itemName = editTextItemName.getText().toString().trim();
+                                String itemPriceKg = editTextPriceKg.getText().toString().trim();
+                                String itemPricePc = editTextPricePc.getText().toString().trim();
+                                HomeMo homeMo = new HomeMo(itemId,itemName,itemPriceKg,itemPricePc,itemImage);
 
-                                HomeMo upload = new HomeMo(itemImage, itemName, itemPriceKg, itemPricePc, num);
-
-                                mDatabaseRefrence.setValue(upload);
+                                reference.child(itemId).setValue(homeMo);
 
                                 Toast.makeText(getContext(), "Upload Successful", Toast.LENGTH_SHORT).show();
 
@@ -167,5 +163,4 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
             Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
-
 }
