@@ -134,13 +134,14 @@ public class CardEditDialog extends DialogFragment {
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
 
-                        mStorageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        mStorageReference.child(itemId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 String itemName = editTextItemName.getText().toString().trim();
                                 String itemPriceKg = editTextPriceKg.getText().toString().trim();
                                 String itemPricePc = editTextPricePc.getText().toString().trim();
-                                HomeMo homeMo = new HomeMo(itemId,itemName,itemPriceKg,itemPricePc,itemImage);
+                                itemImage = uri.toString();
+                                HomeMo homeMo = new HomeMo(itemImage, itemName, itemPriceKg, itemPricePc, itemId);
 
                                 reference.child(itemId).setValue(homeMo);
 
@@ -160,7 +161,16 @@ public class CardEditDialog extends DialogFragment {
 
 
         } else {
-            Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
+
+            String itemName = editTextItemName.getText().toString().trim();
+            String itemPriceKg = editTextPriceKg.getText().toString().trim();
+            String itemPricePc = editTextPricePc.getText().toString().trim();
+
+            HomeMo homeMo = new HomeMo(itemImage, itemName, itemPriceKg, itemPricePc, itemId);
+
+            reference.child(itemId).setValue(homeMo);
+            getDialog().dismiss();
+
         }
     }
 }
