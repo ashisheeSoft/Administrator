@@ -39,6 +39,7 @@ import java.util.Random;
 import static android.app.Activity.RESULT_OK;
 
 public class CardEditDialog extends DialogFragment {
+    ///dinesh
     private Uri mItemImageUri;
     private EditText editTextItemName;
     private EditText editTextPriceKg;
