@@ -6,6 +6,15 @@ public class HomeMo {
     private String itemPricekg;
     private String itemPricepcs;
     private String itemId;
+    private String itemType;
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
 
     public String getItemImage() {
         return itemImage;
@@ -50,12 +59,13 @@ public class HomeMo {
     public HomeMo() {
     }
 
-    public HomeMo(String itemImage, String itemName, String itemPriceKg, String itemPricePcs, String itemId) {
+    public HomeMo(String itemImage, String itemName, String itemPriceKg, String itemPricePcs, String itemId, String itemType) {
         this.itemImage = itemImage;
         this.itemName = itemName;
         this.itemPricekg = itemPriceKg;
         this.itemPricepcs = itemPricePcs;
         this.itemId = itemId;
+        this.itemType = itemType;
     }
 }
 

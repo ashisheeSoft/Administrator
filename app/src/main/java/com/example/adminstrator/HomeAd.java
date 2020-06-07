@@ -119,7 +119,7 @@ public class HomeAd extends RecyclerView.Adapter<HomeAd.ViewHolder>{
                 bundle.putString("itemImage",homemodel.getItemImage());
                 cardEditDialog.setArguments(bundle);
                 cardEditDialog.show(activity.getSupportFragmentManager(), "cardEditDialog");
-                Toast.makeText(mContext, homemodel.getItemName(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, homemodel.getItemName(), Toast.LENGTH_SHORT).show();
 
             }
         });

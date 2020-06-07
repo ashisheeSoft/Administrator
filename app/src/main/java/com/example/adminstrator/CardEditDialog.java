@@ -39,7 +39,6 @@ import java.util.Random;
 import static android.app.Activity.RESULT_OK;
 
 public class CardEditDialog extends DialogFragment {
-    ///dinesh
     private Uri mItemImageUri;
     private EditText editTextItemName;
     private EditText editTextPriceKg;
@@ -50,6 +49,7 @@ public class CardEditDialog extends DialogFragment {
     DatabaseReference reference;
     String itemId;
     String itemImage;
+    String itemType;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -135,14 +135,23 @@ public class CardEditDialog extends DialogFragment {
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
 
-                        mStorageReference.child(itemId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        mStorageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 String itemName = editTextItemName.getText().toString().trim();
                                 String itemPriceKg = editTextPriceKg.getText().toString().trim();
                                 String itemPricePc = editTextPricePc.getText().toString().trim();
+
                                 itemImage = uri.toString();
-                                HomeMo homeMo = new HomeMo(itemImage, itemName, itemPriceKg, itemPricePc, itemId);
+
+                                if (itemPriceKg.isEmpty())
+                                    itemType = "pcs";
+                                else if (itemPricePc.isEmpty())
+                                    itemType = "kg";
+                                else
+                                    itemType = "kgpcs";
+
+                                HomeMo homeMo = new HomeMo(itemId,itemName,itemPriceKg,itemPricePc,itemImage, itemType);
 
                                 reference.child(itemId).setValue(homeMo);
 
@@ -162,12 +171,19 @@ public class CardEditDialog extends DialogFragment {
 
 
         } else {
-
+            Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
             String itemName = editTextItemName.getText().toString().trim();
             String itemPriceKg = editTextPriceKg.getText().toString().trim();
             String itemPricePc = editTextPricePc.getText().toString().trim();
 
-            HomeMo homeMo = new HomeMo(itemImage, itemName, itemPriceKg, itemPricePc, itemId);
+            if (itemPriceKg.isEmpty())
+                itemType = "pcs";
+            else if (itemPricePc.isEmpty())
+                itemType = "kg";
+            else
+                itemType = "kgpcs";
+
+            HomeMo homeMo = new HomeMo(itemImage, itemName, itemPriceKg, itemPricePc, itemId, itemType);
 
             reference.child(itemId).setValue(homeMo);
             getDialog().dismiss();

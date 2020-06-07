@@ -58,6 +58,7 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
     private String itemPriceKg;
     private String itemPricePc;
     private String itemImage;
+    private String itemType;
 
     private String itemNameCard;
 
@@ -144,7 +145,14 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
                                 itemPriceKg = editTextPriceKg.getText().toString();
                                 itemPricePc = editTextPricePc.getText().toString();
 
-                                HomeMo upload = new HomeMo(itemImage, itemName, itemPriceKg, itemPricePc, num);
+                                if (itemPriceKg.isEmpty())
+                                    itemType = "pcs";
+                                else if (itemPricePc.isEmpty())
+                                    itemType = "kg";
+                                else
+                                    itemType = "kgpcs";
+
+                                HomeMo upload = new HomeMo(itemImage, itemName, itemPriceKg, itemPricePc, num, itemType);
 
                                 mDatabaseRefrence.setValue(upload);
 
