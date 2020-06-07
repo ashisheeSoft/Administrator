@@ -145,10 +145,14 @@ public class FabAddItemDialog extends AppCompatDialogFragment {
                                 itemPriceKg = editTextPriceKg.getText().toString();
                                 itemPricePc = editTextPricePc.getText().toString();
 
-                                if (itemPriceKg.isEmpty())
+                                if (itemPriceKg.isEmpty()) {
                                     itemType = "pcs";
-                                else if (itemPricePc.isEmpty())
+                                    itemPriceKg = "0";
+                                }
+                                else if (itemPricePc.isEmpty()) {
                                     itemType = "kg";
+                                    itemPricePc = "0";
+                                }
                                 else
                                     itemType = "kgpcs";
 

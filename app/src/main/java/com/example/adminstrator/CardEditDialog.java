@@ -176,10 +176,14 @@ public class CardEditDialog extends DialogFragment {
             String itemPriceKg = editTextPriceKg.getText().toString().trim();
             String itemPricePc = editTextPricePc.getText().toString().trim();
 
-            if (itemPriceKg.isEmpty())
+            if (itemPriceKg.isEmpty()) {
                 itemType = "pcs";
-            else if (itemPricePc.isEmpty())
+                itemPriceKg = "0";
+            }
+            else if (itemPricePc.isEmpty()) {
                 itemType = "kg";
+                itemPricePc = "0";
+            }
             else
                 itemType = "kgpcs";
 
