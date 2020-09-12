@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Adminstrator</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu">MENU</string>
+    <string name="orders">ORDERS</string>
+    <string name="order_history">ORDER HISTORY</string>
 </resources>
